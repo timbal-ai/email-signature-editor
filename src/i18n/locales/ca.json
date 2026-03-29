@@ -10,7 +10,35 @@
     "lightMode": "Mode clar",
     "darkMode": "Mode fosc",
     "layoutHorizontal": "Disposició horitzontal",
-    "layoutVertical": "Disposició vertical"
+    "layoutVertical": "Disposició vertical",
+    "simple": "Simple",
+    "advanced": "Avançat",
+    "switchToSimple": "Canvia al mode simple",
+    "switchToAdvanced": "Canvia al mode avançat"
+  },
+  "simpleMode": {
+    "step": "Pas {{current}} de {{total}}",
+    "next": "Següent",
+    "back": "Enrere",
+    "review": "Revisar",
+    "fieldHint": "Feu servir Següent per continuar. Podeu canviar-ho després en mode avançat.",
+    "reviewTitle": "La vostra signatura",
+    "reviewDescription": "Previsualitzeu la signatura i copieu-la per a Gmail.",
+    "copyForGmail": "Copiar per a Gmail",
+    "copyHtml": "Copiar HTML",
+    "editAgain": "Editar des de l'inici",
+    "save": "Desar",
+    "saved": "Desat!",
+    "backToLibrary": "Biblioteca",
+    "libraryTitle": "Les vostres signatures",
+    "librarySubtitle": "Obriu una signatura desada o creeu-ne una de nova.",
+    "createNew": "Crear nova signatura",
+    "noSaved": "Encara no hi ha signatures desades.",
+    "delete": "Suprimir",
+    "untitled": "Signatura — {{date}}",
+    "chooseTemplate": "Trieu una plantilla",
+    "chooseTemplateDescription": "Trieu un disseny per a la signatura. Podreu editar els camps en els passos següents.",
+    "templateTapHint": "Premeu per seleccionar i continuar"
   },
   "labels": {
     "html": "HTML",
@@ -26,6 +54,8 @@
     "phone": "Telèfon",
     "email": "Correu electrònic",
     "website": "Lloc web",
-    "image": "URL de la imatge"
+    "image": "URL de la imatge",
+    "disclaimer": "Avís legal (opcional)",
+    "disclaimerPlaceholder": "Text legal o informatiu sota la signatura. Es conserven els salts de línia."
   }
 }

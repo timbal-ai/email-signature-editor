@@ -1,5 +1,6 @@
 import type { Template } from '../types';
 import { DEFAULT_SIGNATURE_VALUES } from '../types';
+import { DISCLAIMER_SNIPPET } from './disclaimerSnippet';
 
 const HTML = `<table cellpadding="0" cellspacing="0" border="0" style="font-family: 'Times New Roman', Times, serif; font-size: 14px; color: #2c2c2c;">
   <tr>
@@ -18,7 +19,7 @@ const HTML = `<table cellpadding="0" cellspacing="0" border="0" style="font-fami
       </table>
     </td>
   </tr>
-</table>`;
+</table>${DISCLAIMER_SNIPPET}`;
 
 export const ELEGANT_TEMPLATE: Template = {
   id: 'elegant',

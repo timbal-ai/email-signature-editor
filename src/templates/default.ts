@@ -1,5 +1,6 @@
 import type { SignatureValues, Template } from '../types';
 import { DEFAULT_SIGNATURE_VALUES } from '../types';
+import { DISCLAIMER_SNIPPET } from './disclaimerSnippet';
 
 const ICON = (src: string, alt: string) =>
   `<span style="display: inline-block; background-color: rgb(34, 34, 34);"><img src="${src}" alt="${alt}" width="13" style="display: block; background-color: rgb(34, 34, 34);"></span>`;
@@ -43,7 +44,7 @@ const DEFAULT_TEMPLATE_HTML = `<table cellpadding="0" cellspacing="0" border="0"
       <table cellpadding="0" cellspacing="0" border="0"><tr><td height="30"></td></tr></table>
     </td>
   </tr>
-</table>`;
+</table>${DISCLAIMER_SNIPPET}`;
 
 export const DEFAULT_TEMPLATE: Template = {
     id: 'default',
@@ -61,16 +62,39 @@ function ensureUrlProtocol(url: string): string {
     return 'https://' + trimmed;
 }
 
+/** Plain-text disclaimer → safe HTML for table cell; newlines → `<br/>`. */
+function formatDisclaimerForHtml(raw: string): string {
+    if (!raw.trim()) return '';
+    return raw
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/\r\n|\r|\n/g, '<br/>');
+}
+
 export function resolveTemplate(
     templateHtml: string,
     values: SignatureValues
 ): string {
-    const processed: SignatureValues = {
+    const disclaimerRaw =
+        typeof values.DISCLAIMER === 'string' ? values.DISCLAIMER : '';
+    let result = templateHtml;
+    if (!disclaimerRaw.trim()) {
+        result = result.split(DISCLAIMER_SNIPPET).join('');
+    }
+
+    const processed: Record<string, string> = {
         ...values,
         WEBSITE: ensureUrlProtocol(values.WEBSITE),
         LINKEDIN_URL: ensureUrlProtocol(values.LINKEDIN_URL),
     };
-    let result = templateHtml;
+    if (disclaimerRaw.trim()) {
+        processed.DISCLAIMER = formatDisclaimerForHtml(disclaimerRaw);
+    } else {
+        delete processed.DISCLAIMER;
+    }
+
     for (const [key, value] of Object.entries(processed)) {
         const placeholder = `{{${key}}}`;
         result = result.split(placeholder).join(value);

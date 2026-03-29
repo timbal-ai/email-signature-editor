@@ -7,6 +7,7 @@ export const TEMPLATE_VARIABLES = [
   'EMAIL',
   'WEBSITE',
   'IMAGE',
+  'DISCLAIMER',
 ] as const;
 
 export type TemplateVariable = (typeof TEMPLATE_VARIABLES)[number];
@@ -20,6 +21,8 @@ export interface SignatureValues {
   EMAIL: string;
   WEBSITE: string;
   IMAGE: string;
+  /** Optional legal / informational text below the signature (plain text, line breaks preserved). */
+  DISCLAIMER: string;
 }
 
 export const DEFAULT_SIGNATURE_VALUES: SignatureValues = {
@@ -31,6 +34,7 @@ export const DEFAULT_SIGNATURE_VALUES: SignatureValues = {
   EMAIL: 'demo@email.com',
   WEBSITE: 'https://www.demo.com',
   IMAGE: 'https://content.timbal.ai/assets/email-signature.png',
+  DISCLAIMER: '',
 };
 
 export interface Template {
