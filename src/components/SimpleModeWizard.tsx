@@ -80,6 +80,22 @@ export function SimpleModeWizard({
     setStep(1);
   };
 
+  const advanceStep = () => {
+    if (isTemplateStep) {
+      setStep(1);
+    } else {
+      setStep((s) => Math.min(REVIEW_STEP, s + 1));
+    }
+  };
+
+  const handleFieldInputKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    advanceStep();
+  };
+
   return (
     <div
       className={cn(
@@ -170,13 +186,16 @@ export function SimpleModeWizard({
                       onChange={(e) =>
                         onUpdate(fieldConfig[fieldStepIndex].key, e.target.value)
                       }
+                      onKeyDown={handleFieldInputKeyDown}
                       className="h-11 text-base"
                       autoFocus
                     />
                   )}
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  {t('simpleMode.fieldHint')}
+                  {fieldConfig[fieldStepIndex].key === 'DISCLAIMER'
+                    ? t('simpleMode.fieldHintDisclaimer')
+                    : t('simpleMode.fieldHint')}
                 </p>
               </>
             ) : isReview ? (
@@ -250,13 +269,7 @@ export function SimpleModeWizard({
         {!isReview ? (
           <Button
             type="button"
-            onClick={() => {
-              if (isTemplateStep) {
-                setStep(1);
-              } else {
-                setStep((s) => Math.min(REVIEW_STEP, s + 1));
-              }
-            }}
+            onClick={advanceStep}
             className="gap-1"
           >
             {isTemplateStep

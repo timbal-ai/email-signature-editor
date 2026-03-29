@@ -22,6 +22,7 @@
     "back": "Indietro",
     "review": "Rivedi",
     "fieldHint": "Usa Avanti per continuare. Potrai modificare in seguito in modalità avanzata.",
+    "fieldHintDisclaimer": "Tocca Rivedi per vedere e copiare la tua nuova firma.",
     "reviewTitle": "La tua firma",
     "reviewDescription": "Anteprima della firma e copia per Gmail.",
     "copyForGmail": "Copia per Gmail",

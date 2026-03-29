@@ -22,6 +22,7 @@
     "back": "Terug",
     "review": "Controleren",
     "fieldHint": "Gebruik Volgende om door te gaan. U kunt dit later wijzigen in de geavanceerde modus.",
+    "fieldHintDisclaimer": "Klik op Controleren om je nieuwe handtekening te bekijken en te kopiëren.",
     "reviewTitle": "Uw handtekening",
     "reviewDescription": "Bekijk een voorbeeld en kopieer voor Gmail.",
     "copyForGmail": "Kopiëren voor Gmail",

@@ -22,6 +22,7 @@
     "back": "返回",
     "review": "预览确认",
     "fieldHint": "点击「下一步」继续。之后可在高级模式中修改。",
+    "fieldHintDisclaimer": "点击「预览」查看并复制您的新签名。",
     "reviewTitle": "您的签名",
     "reviewDescription": "预览签名并复制到 Gmail。",
     "copyForGmail": "复制供 Gmail 使用",
