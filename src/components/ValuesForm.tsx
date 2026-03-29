@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import type { SignatureValues } from '@/types';
 
 const fieldConfig = [
@@ -51,6 +52,19 @@ export function ValuesForm({ values, onUpdate }: ValuesFormProps) {
               />
             </div>
           ))}
+        </div>
+        <div className="mt-4 space-y-1.5">
+          <Label htmlFor="DISCLAIMER" className="text-xs text-muted-foreground">
+            {t('fields.disclaimer')}
+          </Label>
+          <Textarea
+            id="DISCLAIMER"
+            value={values.DISCLAIMER}
+            onChange={(e) => onUpdate('DISCLAIMER', e.target.value)}
+            rows={4}
+            className="text-sm bg-background text-foreground dark:bg-background"
+            placeholder={t('fields.disclaimerPlaceholder')}
+          />
         </div>
       </CardContent>
     </Card>

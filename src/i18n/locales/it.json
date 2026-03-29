@@ -10,7 +10,35 @@
     "lightMode": "Modalità chiara",
     "darkMode": "Modalità scura",
     "layoutHorizontal": "Layout orizzontale",
-    "layoutVertical": "Layout verticale"
+    "layoutVertical": "Layout verticale",
+    "simple": "Semplice",
+    "advanced": "Avanzato",
+    "switchToSimple": "Passa alla modalità semplice",
+    "switchToAdvanced": "Passa alla modalità avanzata"
+  },
+  "simpleMode": {
+    "step": "Passo {{current}} di {{total}}",
+    "next": "Avanti",
+    "back": "Indietro",
+    "review": "Rivedi",
+    "fieldHint": "Usa Avanti per continuare. Potrai modificare in seguito in modalità avanzata.",
+    "reviewTitle": "La tua firma",
+    "reviewDescription": "Anteprima della firma e copia per Gmail.",
+    "copyForGmail": "Copia per Gmail",
+    "copyHtml": "Copia HTML",
+    "editAgain": "Modifica dall'inizio",
+    "save": "Salva",
+    "saved": "Salvato!",
+    "backToLibrary": "Libreria",
+    "libraryTitle": "Le tue firme",
+    "librarySubtitle": "Apri una firma salvata o creane una nuova.",
+    "createNew": "Crea nuova firma",
+    "noSaved": "Nessuna firma salvata.",
+    "delete": "Elimina",
+    "untitled": "Firma — {{date}}",
+    "chooseTemplate": "Scegli un modello",
+    "chooseTemplateDescription": "Scegli un layout per la firma. Potrai modificare i campi nei passaggi successivi.",
+    "templateTapHint": "Clicca per selezionare e continuare"
   },
   "labels": {
     "html": "HTML",
@@ -26,6 +54,8 @@
     "phone": "Telefono",
     "email": "Email",
     "website": "Sito web",
-    "image": "URL immagine"
+    "image": "URL immagine",
+    "disclaimer": "Disclaimer (facoltativo)",
+    "disclaimerPlaceholder": "Testo legale o informativo sotto la firma. Le interruzioni di riga sono mantenute."
   }
 }

@@ -10,7 +10,35 @@
     "lightMode": "Light mode",
     "darkMode": "Dark mode",
     "layoutHorizontal": "Horizontal layout",
-    "layoutVertical": "Vertical layout"
+    "layoutVertical": "Vertical layout",
+    "simple": "Simple",
+    "advanced": "Advanced",
+    "switchToSimple": "Switch to simple mode",
+    "switchToAdvanced": "Switch to advanced mode"
+  },
+  "simpleMode": {
+    "step": "Step {{current}} of {{total}}",
+    "next": "Next",
+    "back": "Back",
+    "review": "Review",
+    "fieldHint": "Use Next to continue. You can change this later in advanced mode.",
+    "reviewTitle": "Your signature",
+    "reviewDescription": "Preview your signature and copy it for Gmail.",
+    "copyForGmail": "Copy for Gmail",
+    "copyHtml": "Copy HTML",
+    "editAgain": "Edit from start",
+    "save": "Save",
+    "saved": "Saved!",
+    "backToLibrary": "Library",
+    "libraryTitle": "Your signatures",
+    "librarySubtitle": "Open a saved signature or create a new one.",
+    "createNew": "Create new signature",
+    "noSaved": "No saved signatures yet.",
+    "delete": "Delete",
+    "untitled": "Signature — {{date}}",
+    "chooseTemplate": "Choose a template",
+    "chooseTemplateDescription": "Pick a layout for your signature. You can change fields on the next steps.",
+    "templateTapHint": "Click to select and continue"
   },
   "labels": {
     "html": "HTML",
@@ -26,6 +54,8 @@
     "phone": "Phone",
     "email": "Email",
     "website": "Website",
-    "image": "Image URL"
+    "image": "Image URL",
+    "disclaimer": "Disclaimer (optional)",
+    "disclaimerPlaceholder": "Legal or informational text shown below your signature. Line breaks are preserved."
   }
 }

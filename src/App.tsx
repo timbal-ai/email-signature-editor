@@ -9,7 +9,25 @@ import { ValuesForm } from './components/ValuesForm';
 import { HtmlPanel } from './components/HtmlPanel';
 import { PreviewPanel } from './components/PreviewPanel';
 import { GitHubFooter } from './components/GitHubFooter';
+import { SimpleModeLibrary } from './components/SimpleModeLibrary';
+import { SimpleModeWizard, SIMPLE_REVIEW_STEP } from './components/SimpleModeWizard';
+import {
+  deleteSavedSignature,
+  loadSavedSignatures,
+  upsertSavedSignature,
+  type SavedSignature,
+} from './lib/savedSignatures';
 import { TooltipProvider } from '@/components/ui/tooltip';
+
+const MODE_STORAGE_KEY = 'email-signature-editor-mode';
+
+function readInitialAdvancedMode(): boolean {
+  if (typeof window === 'undefined') return false;
+  const v = localStorage.getItem(MODE_STORAGE_KEY);
+  if (v === 'advanced') return true;
+  if (v === 'simple') return false;
+  return false;
+}
 
 export default function App() {
   const { i18n } = useTranslation();
@@ -25,7 +43,17 @@ export default function App() {
   const [copiedSection, setCopiedSection] = useState<'html' | 'preview' | null>(null);
   const [layoutVertical, setLayoutVertical] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [advancedMode, setAdvancedMode] = useState(readInitialAdvancedMode);
+  const [simpleFlow, setSimpleFlow] = useState<'library' | 'wizard'>('library');
+  const [wizardInitialStep, setWizardInitialStep] = useState(0);
+  const [wizardSessionKey, setWizardSessionKey] = useState(0);
+  const [editingSavedId, setEditingSavedId] = useState<string | null>(null);
+  const [savedLibrary, setSavedLibrary] = useState<SavedSignature[]>(() =>
+    typeof window !== 'undefined' ? loadSavedSignatures() : []
+  );
+  const [saveSuccess, setSaveSuccess] = useState(false);
   const previewIframeRef = useRef<HTMLIFrameElement>(null);
+  const simpleModeIframeRef = useRef<HTMLIFrameElement>(null);
 
   const resolvedHtml = resolveTemplate(templateHtml, values);
 
@@ -47,13 +75,14 @@ export default function App() {
   }, [layoutVertical]);
 
   useEffect(() => {
+    if (!advancedMode) return;
     if (layoutVertical) {
       const timer = setTimeout(resizePreviewToContent, 50);
       return () => clearTimeout(timer);
     } else {
       resizePreviewToContent();
     }
-  }, [layoutVertical, resolvedHtml, resizePreviewToContent]);
+  }, [layoutVertical, resolvedHtml, resizePreviewToContent, advancedMode]);
 
   useEffect(() => {
     if (darkMode) {
@@ -74,6 +103,15 @@ export default function App() {
     },
     []
   );
+
+  /** Simple-mode template step: apply template HTML and reset field defaults. */
+  const applyTemplateWithDefaults = useCallback((templateId: string) => {
+    const template = TEMPLATES.find((t) => t.id === templateId);
+    if (!template) return;
+    setSelectedTemplateId(template.id);
+    setTemplateHtml(template.html);
+    setValues({ ...DEFAULT_SIGNATURE_VALUES, ...template.defaultValues });
+  }, []);
 
   const updateValue = useCallback((key: keyof SignatureValues, value: string) => {
     setValues((prev) => ({ ...prev, [key]: value }));
@@ -100,7 +138,9 @@ export default function App() {
   );
 
   const copyPreviewAsRichHtml = useCallback(async () => {
-    const iframe = previewIframeRef.current;
+    const iframe = advancedMode
+      ? previewIframeRef.current
+      : simpleModeIframeRef.current;
     const doc = iframe?.contentDocument;
     if (doc) {
       try {
@@ -136,7 +176,7 @@ export default function App() {
     } catch {
       copyToClipboard(resolvedHtml, 'preview');
     }
-  }, [resolvedHtml, copyToClipboard]);
+  }, [resolvedHtml, copyToClipboard, advancedMode]);
 
   const toggleLayout = useCallback(() => {
     setLayoutVertical((prev) => !prev);
@@ -145,6 +185,84 @@ export default function App() {
   const toggleTheme = useCallback(() => {
     setDarkMode((prev) => !prev);
   }, []);
+
+  const toggleAdvancedMode = useCallback(() => {
+    setAdvancedMode((prev) => {
+      const next = !prev;
+      localStorage.setItem(MODE_STORAGE_KEY, next ? 'advanced' : 'simple');
+      if (!next) {
+        setSimpleFlow('library');
+      }
+      return next;
+    });
+  }, []);
+
+  const refreshSavedLibrary = useCallback(() => {
+    setSavedLibrary(loadSavedSignatures());
+  }, []);
+
+  useEffect(() => {
+    if (!advancedMode && simpleFlow === 'library') {
+      refreshSavedLibrary();
+    }
+  }, [advancedMode, simpleFlow, refreshSavedLibrary]);
+
+  const handleSimpleCreateNew = useCallback(() => {
+    const t =
+      TEMPLATES.find((tmpl) => tmpl.id === selectedTemplateId) ?? TEMPLATES[0];
+    if (t) {
+      setSelectedTemplateId(t.id);
+      setTemplateHtml(t.html);
+      setValues({ ...DEFAULT_SIGNATURE_VALUES, ...t.defaultValues });
+    }
+    setEditingSavedId(null);
+    setWizardInitialStep(0);
+    setWizardSessionKey((k) => k + 1);
+    setSimpleFlow('wizard');
+  }, [selectedTemplateId]);
+
+  const handleSimpleOpenSaved = useCallback((id: string) => {
+    const saved = loadSavedSignatures().find((s) => s.id === id);
+    if (!saved) return;
+    const template =
+      TEMPLATES.find((tmpl) => tmpl.id === saved.templateId) ?? TEMPLATES[0];
+    if (!template) return;
+    setSelectedTemplateId(template.id);
+    setTemplateHtml(template.html);
+    setValues({ ...DEFAULT_SIGNATURE_VALUES, ...saved.values });
+    setEditingSavedId(saved.id);
+    setWizardInitialStep(SIMPLE_REVIEW_STEP);
+    setWizardSessionKey((k) => k + 1);
+    setSimpleFlow('wizard');
+  }, []);
+
+  const handleSimpleBackToLibrary = useCallback(() => {
+    setSimpleFlow('library');
+    refreshSavedLibrary();
+  }, [refreshSavedLibrary]);
+
+  const handleSimpleSave = useCallback(() => {
+    const sig = upsertSavedSignature({
+      id: editingSavedId ?? undefined,
+      templateId: selectedTemplateId,
+      values,
+    });
+    setEditingSavedId(sig.id);
+    setSaveSuccess(true);
+    refreshSavedLibrary();
+    setTimeout(() => setSaveSuccess(false), 2000);
+  }, [editingSavedId, selectedTemplateId, values, refreshSavedLibrary]);
+
+  const handleDeleteSaved = useCallback(
+    (id: string) => {
+      deleteSavedSignature(id);
+      refreshSavedLibrary();
+      if (editingSavedId === id) {
+        setEditingSavedId(null);
+      }
+    },
+    [editingSavedId, refreshSavedLibrary]
+  );
 
   return (
     <TooltipProvider>
@@ -159,56 +277,88 @@ export default function App() {
           onThemeToggle={toggleTheme}
           layoutVertical={layoutVertical}
           onLayoutToggle={toggleLayout}
+          advancedMode={advancedMode}
+          onAdvancedModeToggle={toggleAdvancedMode}
         />
 
         <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto p-4">
-          <ValuesForm values={values} onUpdate={updateValue} />
+          {advancedMode ? (
+            <>
+              <ValuesForm values={values} onUpdate={updateValue} />
 
-          <div className="min-h-0 flex-1 overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-            {layoutVertical ? (
-              <Group orientation="vertical" className="h-full">
-                <Panel defaultSize={40} minSize={20} id="preview" className="min-h-0 overflow-hidden">
-                  <PreviewPanel
-                    resolvedHtml={resolvedHtml}
-                    onCopy={copyPreviewAsRichHtml}
-                    copied={copiedSection === 'preview'}
-                    iframeRef={previewIframeRef}
-                    onIframeLoad={() => layoutVertical && resizePreviewToContent()}
-                  />
-                </Panel>
-                <Separator className="resize-handle-vertical" />
-                <Panel defaultSize={60} minSize={30} id="html" className="min-h-0 overflow-hidden">
-                  <HtmlPanel
-                    value={templateHtml}
-                    onChange={setTemplateHtml}
-                    onCopy={() => copyToClipboard(resolvedHtml, 'html')}
-                    copied={copiedSection === 'html'}
-                  />
-                </Panel>
-              </Group>
-            ) : (
-              <Group orientation="horizontal" className="h-full">
-                <Panel defaultSize={50} minSize={25} id="html" className="min-h-0 overflow-hidden">
-                  <HtmlPanel
-                    value={templateHtml}
-                    onChange={setTemplateHtml}
-                    onCopy={() => copyToClipboard(resolvedHtml, 'html')}
-                    copied={copiedSection === 'html'}
-                  />
-                </Panel>
-                <Separator className="resize-handle-horizontal" />
-                <Panel defaultSize={50} minSize={25} id="preview" className="min-h-0 overflow-hidden">
-                  <PreviewPanel
-                    resolvedHtml={resolvedHtml}
-                    onCopy={copyPreviewAsRichHtml}
-                    copied={copiedSection === 'preview'}
-                    iframeRef={previewIframeRef}
-                    onIframeLoad={() => layoutVertical && resizePreviewToContent()}
-                  />
-                </Panel>
-              </Group>
-            )}
-          </div>
+              <div className="min-h-0 flex-1 overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+                {layoutVertical ? (
+                  <Group orientation="vertical" className="h-full">
+                    <Panel defaultSize={40} minSize={20} id="preview" className="min-h-0 overflow-hidden">
+                      <PreviewPanel
+                        resolvedHtml={resolvedHtml}
+                        onCopy={copyPreviewAsRichHtml}
+                        copied={copiedSection === 'preview'}
+                        iframeRef={previewIframeRef}
+                        onIframeLoad={() => layoutVertical && resizePreviewToContent()}
+                      />
+                    </Panel>
+                    <Separator className="resize-handle-vertical" />
+                    <Panel defaultSize={60} minSize={30} id="html" className="min-h-0 overflow-hidden">
+                      <HtmlPanel
+                        value={templateHtml}
+                        onChange={setTemplateHtml}
+                        onCopy={() => copyToClipboard(resolvedHtml, 'html')}
+                        copied={copiedSection === 'html'}
+                      />
+                    </Panel>
+                  </Group>
+                ) : (
+                  <Group orientation="horizontal" className="h-full">
+                    <Panel defaultSize={50} minSize={25} id="html" className="min-h-0 overflow-hidden">
+                      <HtmlPanel
+                        value={templateHtml}
+                        onChange={setTemplateHtml}
+                        onCopy={() => copyToClipboard(resolvedHtml, 'html')}
+                        copied={copiedSection === 'html'}
+                      />
+                    </Panel>
+                    <Separator className="resize-handle-horizontal" />
+                    <Panel defaultSize={50} minSize={25} id="preview" className="min-h-0 overflow-hidden">
+                      <PreviewPanel
+                        resolvedHtml={resolvedHtml}
+                        onCopy={copyPreviewAsRichHtml}
+                        copied={copiedSection === 'preview'}
+                        iframeRef={previewIframeRef}
+                        onIframeLoad={() => layoutVertical && resizePreviewToContent()}
+                      />
+                    </Panel>
+                  </Group>
+                )}
+              </div>
+            </>
+          ) : simpleFlow === 'library' ? (
+            <SimpleModeLibrary
+              items={savedLibrary}
+              onCreateNew={handleSimpleCreateNew}
+              onOpenSaved={handleSimpleOpenSaved}
+              onDeleteSaved={handleDeleteSaved}
+            />
+          ) : (
+            <SimpleModeWizard
+              key={wizardSessionKey}
+              initialStep={wizardInitialStep}
+              values={values}
+              onUpdate={updateValue}
+              resolvedHtml={resolvedHtml}
+              onCopyHtml={() => copyToClipboard(resolvedHtml, 'html')}
+              onCopyPreview={copyPreviewAsRichHtml}
+              copiedHtml={copiedSection === 'html'}
+              copiedPreview={copiedSection === 'preview'}
+              iframeRef={simpleModeIframeRef}
+              onIframeLoad={() => {}}
+              onBackToLibrary={handleSimpleBackToLibrary}
+              onSave={handleSimpleSave}
+              saveSuccess={saveSuccess}
+              selectedTemplateId={selectedTemplateId}
+              onTemplateApply={applyTemplateWithDefaults}
+            />
+          )}
         </div>
         <GitHubFooter />
       </div>

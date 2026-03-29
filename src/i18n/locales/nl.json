@@ -10,7 +10,35 @@
     "lightMode": "Lichtmodus",
     "darkMode": "Donkere modus",
     "layoutHorizontal": "Horizontale weergave",
-    "layoutVertical": "Verticale weergave"
+    "layoutVertical": "Verticale weergave",
+    "simple": "Eenvoudig",
+    "advanced": "Geavanceerd",
+    "switchToSimple": "Schakel naar eenvoudige modus",
+    "switchToAdvanced": "Schakel naar geavanceerde modus"
+  },
+  "simpleMode": {
+    "step": "Stap {{current}} van {{total}}",
+    "next": "Volgende",
+    "back": "Terug",
+    "review": "Controleren",
+    "fieldHint": "Gebruik Volgende om door te gaan. U kunt dit later wijzigen in de geavanceerde modus.",
+    "reviewTitle": "Uw handtekening",
+    "reviewDescription": "Bekijk een voorbeeld en kopieer voor Gmail.",
+    "copyForGmail": "Kopiëren voor Gmail",
+    "copyHtml": "HTML kopiëren",
+    "editAgain": "Opnieuw bewerken vanaf het begin",
+    "save": "Opslaan",
+    "saved": "Opgeslagen!",
+    "backToLibrary": "Bibliotheek",
+    "libraryTitle": "Uw handtekeningen",
+    "librarySubtitle": "Open een opgeslagen handtekening of maak een nieuwe.",
+    "createNew": "Nieuwe handtekening maken",
+    "noSaved": "Nog geen opgeslagen handtekeningen.",
+    "delete": "Verwijderen",
+    "untitled": "Handtekening — {{date}}",
+    "chooseTemplate": "Kies een sjabloon",
+    "chooseTemplateDescription": "Kies een lay-out voor uw handtekening. U kunt de velden in de volgende stappen aanpassen.",
+    "templateTapHint": "Klik om te selecteren en door te gaan"
   },
   "labels": {
     "html": "HTML",
@@ -26,6 +54,8 @@
     "phone": "Telefoon",
     "email": "E-mail",
     "website": "Website",
-    "image": "Afbeelding-URL"
+    "image": "Afbeelding-URL",
+    "disclaimer": "Disclaimer (optioneel)",
+    "disclaimerPlaceholder": "Juridische of informatieve tekst onder uw handtekening. Regeleinden blijven behouden."
   }
 }
