@@ -22,6 +22,7 @@
     "back": "Zurück",
     "review": "Überprüfen",
     "fieldHint": "Mit Weiter fortfahren. Sie können dies später im erweiterten Modus ändern.",
+    "fieldHintDisclaimer": "Klicken Sie auf Überprüfen, um Ihre neue Signatur anzuzeigen und zu kopieren.",
     "reviewTitle": "Ihre Signatur",
     "reviewDescription": "Vorschau anzeigen und für Gmail kopieren.",
     "copyForGmail": "Für Gmail kopieren",

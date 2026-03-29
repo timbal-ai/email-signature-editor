@@ -22,6 +22,7 @@
     "back": "Back",
     "review": "Review",
     "fieldHint": "Use Next to continue. You can change this later in advanced mode.",
+    "fieldHintDisclaimer": "Press Review to see and copy your new signature.",
     "reviewTitle": "Your signature",
     "reviewDescription": "Preview your signature and copy it for Gmail.",
     "copyForGmail": "Copy for Gmail",

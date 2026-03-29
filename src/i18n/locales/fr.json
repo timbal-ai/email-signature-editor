@@ -22,6 +22,7 @@
     "back": "Retour",
     "review": "Vérifier",
     "fieldHint": "Utilisez Suivant pour continuer. Vous pourrez modifier cela plus tard en mode avancé.",
+    "fieldHintDisclaimer": "Appuyez sur Vérifier pour voir et copier votre nouvelle signature.",
     "reviewTitle": "Votre signature",
     "reviewDescription": "Prévisualisez votre signature et copiez-la pour Gmail.",
     "copyForGmail": "Copier pour Gmail",

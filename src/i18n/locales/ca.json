@@ -22,6 +22,7 @@
     "back": "Enrere",
     "review": "Revisar",
     "fieldHint": "Feu servir Següent per continuar. Podeu canviar-ho després en mode avançat.",
+    "fieldHintDisclaimer": "Premeu Revisar per veure i copiar la vostra nova signatura.",
     "reviewTitle": "La vostra signatura",
     "reviewDescription": "Previsualitzeu la signatura i copieu-la per a Gmail.",
     "copyForGmail": "Copiar per a Gmail",

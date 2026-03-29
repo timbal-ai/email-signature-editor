@@ -22,6 +22,7 @@
     "back": "Atrás",
     "review": "Revisar",
     "fieldHint": "Usa Siguiente para continuar. Puedes cambiar esto después en modo avanzado.",
+    "fieldHintDisclaimer": "Pulsa Revisar para ver y copiar tu nueva firma.",
     "reviewTitle": "Tu firma",
     "reviewDescription": "Previsualiza tu firma y cópiala para Gmail.",
     "copyForGmail": "Copiar para Gmail",
